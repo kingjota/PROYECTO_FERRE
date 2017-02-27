@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Ferre
+{
+    class clsDireccion
+    {
+        private clsCliente _IdCliente;        
+        private string _Direccion;        
+
+        public clsDireccion(clsCliente parIdCliente, string parDireccion)
+        {
+            IdCliente = parIdCliente;
+            Direccion=parDireccion;            
+        }
+
+        public clsCliente IdCliente
+        {
+            get { return _IdCliente; }
+            set { _IdCliente = value; }
+        }
+
+        public string Direccion
+        {
+            get { return _Direccion; }
+            set { _Direccion = value; }
+        }
+
+        public void Insertar()
+        {
+            SqlConnection conexion;
+            conexion = new SqlConnection("SERVER=.;DATABASE=Inversiones_Ferreteria_Cristina;USER=sa;PWD=continental");
+            SqlCommand comando;
+            comando = new SqlCommand("usp_Direccion_Insertar", conexion);
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            //Cuidado!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //Cuidado!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //Cuidado!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //Cuidado!!!!!!!!!!!!!!!!!!!!!!!!!!
+            comando.Parameters.AddWithValue("@parIdCliente", IdCliente.IdCliente);
+            //Cuidado!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //Cuidado!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //Cuidado!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //Cuidado!!!!!!!!!!!!!!!!!!!!!!!!!!
+            comando.Parameters.AddWithValue("@parDireccion",Direccion);            
+            conexion.Open();
+            comando.ExecuteNonQuery();
+            conexion.Close();
+        }
+    }
+}
