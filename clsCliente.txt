@@ -10,6 +10,7 @@ namespace Ferre
     class clsCliente
     {
         //campos
+        private int _IdCliente;        
         private string _Nombre;
         private string _Apellido;
         private string _Telefono;
@@ -25,6 +26,11 @@ namespace Ferre
             Apellido = parApellido;
             Telefono = parTelefono;
             RUC = parRUC;
+        }
+        public clsCliente(int parIdCliente, string parNombre)
+        {
+            IdCliente = parIdCliente;
+            Nombre = parNombre;
         }
         public string Nombre
         {
@@ -48,6 +54,11 @@ namespace Ferre
         {
             get { return _RUC; }
             set { _RUC = value; }
+        }
+        public int IdCliente
+        {
+            get { return _IdCliente; }
+            set { _IdCliente = value; }
         }
 
         //Propiedades (Características de la clase)
@@ -106,5 +117,28 @@ namespace Ferre
 
             return x;
         }
+
+        public static List<clsCliente> ListarID_Cliente()
+        {
+            List<clsCliente> x = new List<clsCliente>();
+            SqlConnection conexion;
+            conexion = new SqlConnection("SERVER=.;DATABASE=Inversiones_Ferreteria_Cristina;USER=sa;PWD=continental");
+            SqlCommand comando;
+            comando = new SqlCommand("usp_listar_idCliente", conexion);
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            conexion.Open();
+            SqlDataReader contenedor;
+            contenedor = comando.ExecuteReader();
+
+            while (contenedor.Read() == true)
+            {
+                clsCliente MiObjeto;
+                MiObjeto = new clsCliente(Convert.ToInt32(contenedor["ID_Cliente"].ToString()),contenedor["Nombre"].ToString());                
+                x.Add(MiObjeto);
+            }
+            conexion.Close();
+            return x;
+        }
     }
 }
+
