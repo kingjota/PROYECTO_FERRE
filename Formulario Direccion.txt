@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ferre
+{
+    public partial class Form8 : Form
+    {
+        private List<clsCliente> _NombreCliente = new List<clsCliente>();
+
+        internal List<clsCliente> NombreCliente
+        {
+            get { return _NombreCliente; }
+            set { _NombreCliente = value; }
+        }
+        
+        public Form8()
+        {
+            InitializeComponent();
+        }
+
+        private void Form8_Load(object sender, EventArgs e)
+        {
+            //Mostrar los Nombres en el ComboBox
+            cmbNombreCliente.Items.Clear();
+            NombreCliente.Clear();
+            cmbNombreCliente.Items.Add("Seleccione...");
+            foreach (clsCliente elemento in clsCliente.ListarID_Cliente())
+            {
+                NombreCliente.Add(elemento);
+                cmbNombreCliente.Items.Add(elemento.Nombre);
+            }
+            cmbNombreCliente.SelectedIndex = 0;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //Verificar que se ha seleccionado un elemento del 
+            //  comboBox que representa al cargo
+            if (cmbNombreCliente.SelectedIndex == 0)
+            {
+                MessageBox.Show("Seleccione un Nombre.");
+                return;
+            }
+
+            //Instanciar un objeto de la clase clsColaborador
+            clsDireccion nuevo;
+            try
+            {
+                nuevo = new clsDireccion(NombreCliente[cmbNombreCliente.SelectedIndex - 1],
+                                            txtDireccion.Text);
+                nuevo.Insertar();
+            }
+            catch (Exception ErrorCapturado)
+            {
+                MessageBox.Show(ErrorCapturado.Message);
+                return;
+            }
+            MessageBox.Show("Direccion registrada.");
+        }
+    }
+}
