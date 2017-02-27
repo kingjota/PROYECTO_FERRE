@@ -10,54 +10,54 @@ namespace Ferre
 {
     class clsProducto
     {
-        private string _NomProducto;
-        private float _Cantidad;
-        private float _stock;
+        private string _Nombre;
+
+        private string _TipoProducto;
+
+        private string _CodBarra;
+
         //cConstructor
-        public clsProducto(string parNomPro, float parCantidad, float parStock)
+        public clsProducto(string parNombre, string parTipoProducto, string parCodBarra)
         {
-            NomProducto = parNomPro;
-            Cantidad = parCantidad;
-            Stock = parStock;
+            Nombre = parNombre;
+            TipoProducto = parTipoProducto;
+            CodBarra = parCodBarra;
         }
 
         //Propiedades
-        public string NomProducto
+        public string Nombre
         {
-            get { return _NomProducto; }
-            set { _NomProducto = value; }
+            get { return _Nombre; }
+            set { _Nombre = value; }
+        }
+
+        public string TipoProducto
+        {
+            get { return _TipoProducto; }
+            set { _TipoProducto = value; }
         }
 
 
-
-        public float Cantidad
+        public string CodBarra
         {
-            get { return _Cantidad; }
-            set { _Cantidad = value; }
+            get { return _CodBarra; }
+            set { _CodBarra = value; }
         }
-
-
-        public float Stock
-        {
-            get { return _stock; }
-            set { _stock = value; }
-        }
-
         //metodo Insertar
         public void Insertar()
         {
             SqlConnection conexion;
             conexion = new
-            SqlConnection("SERVER=.;DATABASE=InversionesCristina;USER=sa;PWD=continental");
+            SqlConnection("SERVER=.;DATABASE=Inversiones_Ferreteria_Cristina;USER=sa;PWD=continental");
             SqlCommand comando;
             comando = new SqlCommand("usp_Producto_Insertar", conexion);
             comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.Parameters.AddWithValue("@parNombre", NomProducto);
-            comando.Parameters.AddWithValue("@parCantidad", Cantidad);
-            comando.Parameters.AddWithValue("@parStock", Stock);
-            conexion.Open(); //Abrir la conexiÛn
+            comando.Parameters.AddWithValue("@parNombre", Nombre);
+            comando.Parameters.AddWithValue("@parTipoProducto", TipoProducto);
+            comando.Parameters.AddWithValue("@parCodBarra",CodBarra);
+            conexion.Open(); //Abrir la conexi√≥n
             comando.ExecuteNonQuery(); //Ejecutar el comando
-            conexion.Close(); //Cerrar la conexiÛn
+            conexion.Close(); //Cerrar la conexi√≥n
         }
 
 
@@ -67,7 +67,7 @@ namespace Ferre
             List<clsProducto> x = new List<clsProducto>();
 
             SqlConnection conexion;
-            conexion = new SqlConnection("SERVER=.;DATABASE=InversionesCristina;USER=sa;PWD=continental");
+            conexion = new SqlConnection("SERVER=.;DATABASE=Inversiones_Ferreteria_Cristina;USER=sa;PWD=continental");
 
             SqlCommand comando;
             comando = new SqlCommand("usp_Producto_Listar", conexion);
@@ -76,7 +76,7 @@ namespace Ferre
             //Cuando el P.A. retorna un conjunto de datos, se tiene que crear un 
             //              contenedor, este contenedor es un objeto de la clase SqlDataReader
             SqlDataReader contenedor;
-            //El resultado de la ejecuciÛn del comando se est· 
+            //El resultado de la ejecuci√≥n del comando se est√° 
             //  almacenando en un objeto de la clase SqlDataReader
             //  llamad "contenedor"
             contenedor = comando.ExecuteReader(); //Esto se usa cuando el P.A. retorna un conjunto de datos
@@ -88,7 +88,7 @@ namespace Ferre
                 //Convirtiendo cada fila retornada por el P.A en un objeto
                 //  de la clase clsCliente
                 clsProducto miPro;
-                miPro = new clsProducto(contenedor["Nom_prod"].ToString(), Convert.ToInt32(contenedor["Cantidad"]), Convert.ToInt32(contenedor["Stock"]));
+                miPro = new clsProducto(contenedor["Nombre"].ToString(),contenedor["Tipo_Producto"].ToString(),contenedor["CodBarra"].ToString());
                 //Agregando el objeto a la lista que se va a retornar
                 x.Add(miPro);
             }
@@ -98,3 +98,4 @@ namespace Ferre
         }
     }
 }
+
