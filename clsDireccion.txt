@@ -51,5 +51,21 @@ namespace Ferre
             comando.ExecuteNonQuery();
             conexion.Close();
         }
+        public void Actualizar()
+        {
+            SqlConnection conexion;
+            conexion = new SqlConnection("SERVER=.;DATABASE=Inversiones_Ferreteria_Cristina;USER=sa;PWD=continental");
+
+            SqlCommand comando;
+            comando = new SqlCommand("usp_Cliente_Actualizar_Direccion", conexion);
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            comando.Parameters.AddWithValue("@parIdCliente", IdCliente.IdCliente);
+            comando.Parameters.AddWithValue("@parNueva_Direccion", Direccion);
+
+            conexion.Open();
+            comando.ExecuteNonQuery();
+            conexion.Close();
+
+        }
     }
 }
