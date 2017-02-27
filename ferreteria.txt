@@ -1,0 +1,100 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace Ferre
+{
+    class clsProducto
+    {
+        private string _NomProducto;
+        private float _Cantidad;
+        private float _stock;
+        //cConstructor
+        public clsProducto(string parNomPro, float parCantidad, float parStock)
+        {
+            NomProducto = parNomPro;
+            Cantidad = parCantidad;
+            Stock = parStock;
+        }
+
+        //Propiedades
+        public string NomProducto
+        {
+            get { return _NomProducto; }
+            set { _NomProducto = value; }
+        }
+
+
+
+        public float Cantidad
+        {
+            get { return _Cantidad; }
+            set { _Cantidad = value; }
+        }
+
+
+        public float Stock
+        {
+            get { return _stock; }
+            set { _stock = value; }
+        }
+
+        //metodo Insertar
+        public void Insertar()
+        {
+            SqlConnection conexion;
+            conexion = new
+            SqlConnection("SERVER=.;DATABASE=InversionesCristina;USER=sa;PWD=continental");
+            SqlCommand comando;
+            comando = new SqlCommand("usp_Producto_Insertar", conexion);
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            comando.Parameters.AddWithValue("@parNombre", NomProducto);
+            comando.Parameters.AddWithValue("@parCantidad", Cantidad);
+            comando.Parameters.AddWithValue("@parStock", Stock);
+            conexion.Open(); //Abrir la conexión
+            comando.ExecuteNonQuery(); //Ejecutar el comando
+            conexion.Close(); //Cerrar la conexión
+        }
+
+
+        //Metodo Listar
+        public static List<clsProducto> Listar()
+        {
+            List<clsProducto> x = new List<clsProducto>();
+
+            SqlConnection conexion;
+            conexion = new SqlConnection("SERVER=.;DATABASE=InversionesCristina;USER=sa;PWD=continental");
+
+            SqlCommand comando;
+            comando = new SqlCommand("usp_Producto_Listar", conexion);
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            conexion.Open();
+            //Cuando el P.A. retorna un conjunto de datos, se tiene que crear un 
+            //              contenedor, este contenedor es un objeto de la clase SqlDataReader
+            SqlDataReader contenedor;
+            //El resultado de la ejecución del comando se está 
+            //  almacenando en un objeto de la clase SqlDataReader
+            //  llamad "contenedor"
+            contenedor = comando.ExecuteReader(); //Esto se usa cuando el P.A. retorna un conjunto de datos
+
+            //Esto se utiliza para recorrer el contenido
+            // del contenedor
+            while (contenedor.Read() == true)
+            {
+                //Convirtiendo cada fila retornada por el P.A en un objeto
+                //  de la clase clsCliente
+                clsProducto miPro;
+                miPro = new clsProducto(contenedor["Nom_prod"].ToString(), Convert.ToInt32(contenedor["Cantidad"]), Convert.ToInt32(contenedor["Stock"]));
+                //Agregando el objeto a la lista que se va a retornar
+                x.Add(miPro);
+            }
+            conexion.Close();
+
+            return x;
+        }
+    }
+}
