@@ -50,15 +50,15 @@ namespace Ferre
             set { _RUC = value; }
         }
 
-        //Propiedades (Características de la clase)
-        //      Actúan como filtros
+        //Propiedades (CaracterÃ­sticas de la clase)
+        //      ActÃºan como filtros
         
         //metodo Insertar
         public void Insertar()
         {
             SqlConnection conexion;
             conexion = new
-            SqlConnection("SERVER=.;DATABASE=InversionesCristina;USER=sa;PWD=continental");
+            SqlConnection("SERVER=.;DATABASE=Inversiones_Ferreteria_Cristina;USER=sa;PWD=continental");
             SqlCommand comando;
             comando = new SqlCommand("usp_Cliente_Insertar", conexion);
             comando.CommandType = System.Data.CommandType.StoredProcedure;
@@ -67,9 +67,9 @@ namespace Ferre
             comando.Parameters.AddWithValue("@parTelefono", Telefono);
             comando.Parameters.AddWithValue("@parRUC", RUC);
             
-            conexion.Open(); //Abrir la conexión
+            conexion.Open(); //Abrir la conexiÃ³n
             comando.ExecuteNonQuery(); //Ejecutar el comando
-            conexion.Close(); //Cerrar la conexión
+            conexion.Close(); //Cerrar la conexiÃ³n
         }
         //Metodo Listar
         public static List<clsCliente> Listar()
@@ -77,7 +77,7 @@ namespace Ferre
             List<clsCliente> x = new List<clsCliente>();
 
             SqlConnection conexion;
-            conexion = new SqlConnection("SERVER=.;DATABASE=InversionesCristina;USER=sa;PWD=continental");
+            conexion = new SqlConnection("SERVER=.;DATABASE=Inversiones_Ferreteria_Cristina;USER=sa;PWD=continental");
 
             SqlCommand comando;
             comando = new SqlCommand("usp_Cliente_Listar", conexion);
@@ -86,7 +86,7 @@ namespace Ferre
             //Cuando el P.A. retorna un conjunto de datos, se tiene que crear un 
             //              contenedor, este contenedor es un objeto de la clase SqlDataReader
             SqlDataReader contenedor;
-            //El resultado de la ejecución del comando se está 
+            //El resultado de la ejecuciÃ³n del comando se estÃ¡ 
             //  almacenando en un objeto de la clase SqlDataReader
             //  llamad "contenedor"
             contenedor = comando.ExecuteReader(); //Esto se usa cuando el P.A. retorna un conjunto de datos
