@@ -1,0 +1,110 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Ferre
+{
+    class clsCliente
+    {
+        //campos
+        private string _Nombre;
+        private string _Apellido;
+        private string _Telefono;
+        private string _RUC;
+
+        //Constructor
+        public clsCliente(string parNombre,
+                          string parApellido,
+                          string parTelefono,
+                          string parRUC)
+        {
+            Nombre = parNombre;
+            Apellido = parApellido;
+            Telefono = parTelefono;
+            RUC = parRUC;
+        }
+        public string Nombre
+        {
+            get { return _Nombre; }
+            set { _Nombre = value; }
+        }
+
+        public string Apellido
+        {
+            get { return _Apellido; }
+            set { _Apellido = value; }
+        }
+
+        public string Telefono
+        {
+            get { return _Telefono; }
+            set { _Telefono = value; }
+        }
+
+        public string RUC
+        {
+            get { return _RUC; }
+            set { _RUC = value; }
+        }
+
+        //Propiedades (Características de la clase)
+        //      Actúan como filtros
+        
+        //metodo Insertar
+        public void Insertar()
+        {
+            SqlConnection conexion;
+            conexion = new
+            SqlConnection("SERVER=.;DATABASE=InversionesCristina;USER=sa;PWD=continental");
+            SqlCommand comando;
+            comando = new SqlCommand("usp_Cliente_Insertar", conexion);
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            comando.Parameters.AddWithValue("@parNombre", Nombre);
+            comando.Parameters.AddWithValue("@parApellido", Apellido);
+            comando.Parameters.AddWithValue("@parTelefono", Telefono);
+            comando.Parameters.AddWithValue("@parRUC", RUC);
+            
+            conexion.Open(); //Abrir la conexión
+            comando.ExecuteNonQuery(); //Ejecutar el comando
+            conexion.Close(); //Cerrar la conexión
+        }
+        //Metodo Listar
+        public static List<clsCliente> Listar()
+        {
+            List<clsCliente> x = new List<clsCliente>();
+
+            SqlConnection conexion;
+            conexion = new SqlConnection("SERVER=.;DATABASE=InversionesCristina;USER=sa;PWD=continental");
+
+            SqlCommand comando;
+            comando = new SqlCommand("usp_Cliente_Listar", conexion);
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            conexion.Open();
+            //Cuando el P.A. retorna un conjunto de datos, se tiene que crear un 
+            //              contenedor, este contenedor es un objeto de la clase SqlDataReader
+            SqlDataReader contenedor;
+            //El resultado de la ejecución del comando se está 
+            //  almacenando en un objeto de la clase SqlDataReader
+            //  llamad "contenedor"
+            contenedor = comando.ExecuteReader(); //Esto se usa cuando el P.A. retorna un conjunto de datos
+
+            //Esto se utiliza para recorrer el contenido
+            // del contenedor
+            while (contenedor.Read() == true)
+            {
+                //Convirtiendo cada fila retornada por el P.A en un objeto
+                //  de la clase clsCliente
+                clsCliente MiObjeto;
+                MiObjeto = new clsCliente(contenedor["Nombres"].ToString(), contenedor["Apellidos"].ToString(), contenedor["Telefono"].ToString(), contenedor["RUC"].ToString());
+                //Agregando el objeto a la lista que se va a retornar
+                x.Add(MiObjeto);
+            }
+            conexion.Close();
+
+            return x;
+        }
+    }
+}
