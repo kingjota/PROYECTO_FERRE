@@ -34,7 +34,7 @@ namespace Ferre
             foreach (clsCliente elemento in clsCliente.ListarID_Cliente())
             {
                 NombreCliente.Add(elemento);
-                cmbNombreCliente.Items.Add(elemento.Nombre);
+                cmbNombreCliente.Items.Add(elemento.Nombre + " " + elemento.Apellido);
             }
             cmbNombreCliente.SelectedIndex = 0;
         }
@@ -63,6 +63,15 @@ namespace Ferre
                 return;
             }
             MessageBox.Show("Direccion registrada.");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            clsDireccion NuevaDireccion;
+            NuevaDireccion = new clsDireccion(NombreCliente[cmbNombreCliente.SelectedIndex - 1],
+                                            txtDireccion.Text);
+            NuevaDireccion.Actualizar();
+            MessageBox.Show("Direccion Actualizada satisfactoriamente");
         }
     }
 }
